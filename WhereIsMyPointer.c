@@ -70,7 +70,7 @@ bool update(void) {
     for (i = 0; i < 4; i++) {
         if (locators[i] == 0)
             locators[i] = create_window();
-	
+	/* Locators. */
         switch (i) {
             case 0:
                 XMoveResizeWindow(dpy, locators[i],
@@ -116,10 +116,11 @@ void draw(XEvent *ev) {
 void HelpFunction() {
 	printf("WhereIsMyPointer?\n");
         printf("wimpointer --l || --loop : Find your pointer with color loop.\n");
+	printf("wimpointer --c || --custom : Customize WhereIsMyPointer.\n");
 }
 
 int main(int argc, char* argv[]) {
-    // HelpFunction()
+    /* HelpFunction() */
     if(argc == 1) {
 	HelpFunction();
 	return 0;
@@ -131,18 +132,38 @@ int main(int argc, char* argv[]) {
     fd_set fds;
     struct timespec start;
     struct timeval timeout;
-    int fps = 30;
+    int fps = 60;
     bool loop = false;
     (void)argc;
     (void)argv;
-    
+    char ch;
+
     printf(settings);
     if(strstr(settings, "--l")) {
 	loop = true;
+    } else if(strstr(settings, "--c")) {
+	printf("FPS : ");	
+	scanf("%d", &fps);
+    	printf("Loop (y | n) : ");
+	scanf(" %c", &ch);
+	if(ch == 'y') {
+		loop = true;
+	} else if(ch == 'n') {
+		loop = false;
+	} else {
+		loop = false;
+	}
+	printf("Window size : ");
+	scanf("%d", &window_size);
+	printf("Distance : ");
+	scanf("%lf", &distance);
+	printf("Speed : ");
+	scanf("%lf", &speed);
+	printf("Ok");
     }
 
     dpy = XOpenDisplay(NULL);
-    test: if (!dpy) { // Loop.
+    test: if (!dpy) { /* Loop. */
         fprintf(stderr, "WhereIsMyPointer: Cannot open display\n");
         exit(EXIT_FAILURE);
     }
