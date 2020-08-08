@@ -3,6 +3,10 @@
 
 ### Build
   * Required libX11
-  * And run ```sh make.sh```
+
+```sh
+$# sh make.sh // GNU/Linux, FreeBSD etc.
+$# fscrift make // Scrift
+``` 
 
 #### WhereIsMyPointer licensed under the terms of MIT License.
