@@ -14,6 +14,7 @@
 #include <sys/select.h>
 #include <time.h>
 #include <X11/Xlib.h>
+#include <string.h>
 
 Display *dpy;
 Window root;
@@ -112,16 +113,33 @@ void draw(XEvent *ev) {
     XFillRectangle(dpy, e->window, gc, e->x, e->y, e->width, e->height);
 }
 
-int main(int argc, char **argv) {
+void HelpFunction() {
+	printf("WhereIsMyPointer?\n");
+        printf("wimpointer --l || --loop : Find your pointer with color loop.\n");
+}
+
+int main(int argc, char* argv[]) {
+    // HelpFunction()
+    if(argc == 1) {
+	HelpFunction();
+	return 0;
+    }
+	
+    char* settings = argv[1];
     int sret, xfd;
     XEvent ev;
     fd_set fds;
     struct timespec start;
     struct timeval timeout;
     int fps = 30;
-
+    bool loop = false;
     (void)argc;
     (void)argv;
+    
+    printf(settings);
+    if(strstr(settings, "--l")) {
+	loop = true;
+    }
 
     dpy = XOpenDisplay(NULL);
     test: if (!dpy) { // Loop.
@@ -150,8 +168,13 @@ int main(int argc, char **argv) {
         }
         else if (sret == 0)
 
-            if (update())
-		goto test;
+            if (update()) {
+		if(loop == true) {		
+			goto test;
+		} else {
+			exit(EXIT_SUCCESS);
+		}
+	    }
 
         while (XPending(dpy)) {
             XNextEvent(dpy, &ev);
