@@ -1,0 +1,2 @@
+system("gcc -std=c99 WhereIsMyPointer.c -o wimpointer -lX11");
+return
